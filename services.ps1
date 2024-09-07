@@ -17,10 +17,10 @@ foreach ($service in $runningServices) {
             Stop-Service -Name $service.Name -Force -ErrorAction Stop
             Write-Output "Stopped service: $($service.Name)"
         } catch {
-            Write-Warning "Could not stop service: $($service.Name) - $($_.Exception.Message)"
+            Write-Error "Could not stop service: $($service.Name) - $($_.Exception.Message)"
         }
     } else {
-        Write-Output "Excluded service: $($service.Name)"
+        Write-Warning "Excluded service: $($service.Name)"
     }
 }
 
