@@ -23,12 +23,12 @@ foreach ($service in $runningServices) {
     if (-not $excludeServices.ContainsKey($serviceName)) {
         try {
             Stop-Service -Name $service.Name -Force -ErrorAction Stop
-            Write-Output "Stopped service: $($service.Name)"
+            Write-Host "[SUCCESS] Stopped service: $($service.Name)" -ForegroundColor Green
         } catch {
-            Write-Error "Could not stop service: $($service.Name) - $($_.Exception.Message)"
+            Write-Host "[WARNING] Could not stop service: $($service.Name) - $($_.Exception.Message)" -ForegroundColor Yellow
         }
     } else {
-        Write-Warning "Excluded service: $($service.Name)"
+        Write-Host "[INFO] Excluded service: $($service.Name)" -ForegroundColor Blue
     }
 }
 
