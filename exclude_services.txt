@@ -17,6 +17,7 @@ CertPropSvc
 KeyIso
 EventSystem
 COMSysApp
+vgc
 CoreMessagingRegistrar
 VaultSvc
 CryptSvc

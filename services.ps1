@@ -1,17 +1,25 @@
-# file containing services to exclude
+# file containing excluded services
 $excludeFile = "C:\Users\IT\Documents\Projects\IT\Stop-Services_Gaming-Optimization\exclude_services.txt"
 
-# read the list of excluded services, trim whitespaces and convert to lowercase
-$excludeServices = Get-Content -Path $excludeFile | ForEach-Object { $_.Trim().ToLower() }
+# init empty hashtable for excluded services
+$excludeServices = @{}
 
-# get all services that are currently running
+# read list of excluded services, trim whitespaces, convert to lowercase, and add them to the hashtable
+Get-Content -Path $excludeFile | ForEach-Object { 
+    $serviceName = $_.Trim().ToLower()
+    if (-not [string]::IsNullOrWhiteSpace($serviceName)) {
+        $excludeServices[$serviceName] = $true 
+    }
+}
+
+# get all services currently running
 $runningServices = Get-Service | Where-Object { $_.Status -eq 'Running' }
 
 foreach ($service in $runningServices) {
-    # convert the service name to lowercase for comparison
-    $serviceName = $service.Name.ToLower()
+    # convert service name to lowercase for comparison
+    $serviceName = $service.Name.Trim().ToLower()
 
-    # check if the service is in the exclusion list
+    # check if service in excluded services
     if (-not $excludeServices.ContainsKey($serviceName)) {
         try {
             Stop-Service -Name $service.Name -Force -ErrorAction Stop
@@ -24,5 +32,5 @@ foreach ($service in $runningServices) {
     }
 }
 
-# pause to keep the window open
+# Pause to keep the window open
 Read-Host "Press Enter to continue..."
